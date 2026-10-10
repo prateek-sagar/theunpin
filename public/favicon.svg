@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="theUnpin mark">
+  <rect width="32" height="32" rx="7" fill="#101B2A" />
+  <path d="M16 24V13" stroke="#75DFC2" stroke-width="2.4" stroke-linecap="round" />
+  <circle cx="16" cy="10" r="3.4" fill="#75DFC2" />
+  <path d="M9 20h14" stroke="#697586" stroke-width="1.6" stroke-linecap="round" />
+</svg>
