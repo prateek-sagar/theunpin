@@ -4,6 +4,7 @@ import Services from "./components/Services.jsx";
 import Approach from "./components/Approach.jsx";
 import About from "./components/About.jsx";
 import ContactCTA from "./components/ContactCTA.jsx";
+import ThreadField from "./components/ThreadField.jsx";
 import Footer from "./components/Footer.jsx";
 
 export default function App() {

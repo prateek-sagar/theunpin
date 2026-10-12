@@ -1,0 +1,67 @@
+/* CollectorMachine — flat engineering-style checkpoint.
+   Colours live in variables so they can be swapped for the live palette.
+   Drawing only: this file declares no animation and no transition. */
+
+.collector-machine {
+  --cm-body: #0b1220;
+  --cm-line: #f3f5f7;
+  --cm-accent: #2dd4bf;
+  --cm-outline-opacity: 0.5;
+  --cm-detail-opacity: 0.24;
+  --cm-tick-opacity: 0.18;
+
+  position: relative;
+  width: 100%;
+  aspect-ratio: 600 / 400;
+}
+
+.collector-machine-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Every shape keeps a thin, constant-width stroke at any rendered size. */
+.collector-machine-svg * {
+  vector-effect: non-scaling-stroke;
+}
+
+.collector-machine-body {
+  fill: var(--cm-body);
+  stroke: none;
+}
+
+.collector-machine-outline {
+  fill: none;
+  stroke: var(--cm-line);
+  stroke-opacity: var(--cm-outline-opacity);
+  stroke-width: 1;
+}
+
+.collector-machine-divider,
+.collector-machine-segment {
+  fill: none;
+  stroke: var(--cm-line);
+  stroke-opacity: var(--cm-detail-opacity);
+  stroke-width: 1;
+}
+
+.collector-machine-tick {
+  fill: none;
+  stroke: var(--cm-line);
+  stroke-opacity: var(--cm-tick-opacity);
+  stroke-width: 1;
+}
+
+.collector-machine-accent {
+  fill: var(--cm-accent);
+  stroke: none;
+}
+
+@media (max-width: 640px) {
+  .collector-machine-divider,
+  .collector-machine-segment,
+  .collector-machine-tick {
+    display: none;
+  }
+}

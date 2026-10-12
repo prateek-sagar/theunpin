@@ -1,0 +1,93 @@
+/* ThreadField — field of threads flowing left to right.
+   Colors live in variables so they can be swapped for the live palette.
+   Motion is driven by seeded SMIL inside ThreadField.jsx; only flat stroke
+   styling lives here. */
+
+.thread-field {
+  --tf-background: #0b1220;
+  --tf-thread: #f3f5f7;
+  --tf-accent: #2dd4bf;
+
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  overflow: hidden;
+  background-color: var(--tf-background);
+}
+
+.thread-field-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Background variant: fills its (relatively positioned) parent instead of
+   claiming its own 70vh band, lets the hero background show through, and stays
+   out of the way of the copy. The threads are dimmed to the hero opacity. */
+.thread-field--background {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  z-index: 0;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.thread-field--background .thread-field-svg {
+  opacity: var(--tf-thread-opacity, 0.7);
+}
+
+.thread-field-veil,
+.thread-field-fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.thread-field-thread {
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  fill: none;
+}
+
+/* Glow underlays (hero + bold) and the per-thread neck brighten overlay. Both
+   carry their width inline; vector-effect keeps them true on screen. */
+.thread-field-glow-path,
+.thread-field-brighten {
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.thread-field-neck-glow {
+  pointer-events: none;
+}
+
+/* Neutral and accent tones stay as variables; tinted threads carry their own
+   flat colour on the stroke attribute (set in ThreadField.jsx). */
+.thread-field-thread--neutral,
+.thread-field-glow-path.thread-field-thread--neutral,
+.thread-field-brighten.thread-field-thread--neutral {
+  stroke: var(--tf-thread);
+}
+
+.thread-field-thread--accent,
+.thread-field-glow-path.thread-field-thread--accent,
+.thread-field-brighten.thread-field-thread--accent {
+  stroke: var(--tf-accent);
+}
+
+.thread-field-thread--highlight {
+  stroke: var(--tf-accent);
+}
+
+@media (max-width: 640px) {
+  .thread-field {
+    height: 50vh;
+  }
+
+  /* The background variant always fills the hero, regardless of viewport. */
+  .thread-field--background {
+    height: 100%;
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BrandPin from "./BrandPin.jsx";
 
 const navItems = [
   { label: "Home", href: "#home" },
@@ -16,11 +17,7 @@ export default function Header() {
     <header className="site-header">
       <div className="container header-inner">
         <a className="brand" href="#home" aria-label="theUnpin — home" onClick={close}>
-          <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M16 25V13" strokeWidth="2.6" strokeLinecap="round" />
-            <circle cx="16" cy="9.5" r="3.4" />
-            <path d="M8.5 20.5h15" strokeWidth="1.8" strokeLinecap="round" opacity="0.55" />
-          </svg>
+          <BrandPin />
           <span className="brand-name">theUnpin</span>
         </a>
 

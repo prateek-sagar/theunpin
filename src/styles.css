@@ -14,6 +14,7 @@
   --line-light: rgba(16, 27, 42, 0.12);
   --radius: 8px;
   --container: 1120px;
+  --hero-loop: 11s;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
 }
@@ -224,6 +225,61 @@ button:focus-visible {
   stroke: none;
 }
 
+/* Brand pin — two states, toggled by the link's :hover / :focus-visible, or by
+   .is-touch-revealed on touch devices (see BrandPin.jsx). A CSS transition
+   between the states keeps the motion reversible and interruptible.
+
+   Tune here:
+     --brand-pin-time / --brand-pin-time-out  duration (in and out)
+     --brand-pin-ease                          easing
+     --brand-pin-tilt                          hover tilt
+     --brand-pin-lift                          hover lift
+     --brand-pin-ring-scale / -opacity         ring travel and strength
+     --brand-pin-accent                        accent (ring is the only moving teal) */
+.brand {
+  --brand-pin-time: 0.55s;
+  --brand-pin-time-out: 0.45s;
+  --brand-pin-ease: cubic-bezier(0.45, 0, 0.55, 1);
+  --brand-pin-tilt: 12deg;
+  --brand-pin-lift: -2px;
+  --brand-pin-ring-scale: 1;
+  --brand-pin-ring-opacity: 0.5;
+  --brand-pin-accent: var(--teal);
+}
+
+.brand-pin {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: transform var(--brand-pin-time-out) var(--brand-pin-ease);
+}
+
+.brand-mark .brand-pin-ring {
+  fill: none;
+  stroke: var(--brand-pin-accent, var(--teal));
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transform: scale(0.35);
+  opacity: 0;
+  transition: transform var(--brand-pin-time-out) var(--brand-pin-ease),
+    opacity var(--brand-pin-time-out) var(--brand-pin-ease);
+}
+
+.brand:hover .brand-pin,
+.brand:focus-visible .brand-pin,
+.brand-mark.is-touch-revealed .brand-pin {
+  transform: translateY(var(--brand-pin-lift)) rotate(var(--brand-pin-tilt));
+  transition-duration: var(--brand-pin-time);
+}
+
+.brand:hover .brand-pin-ring,
+.brand:focus-visible .brand-pin-ring,
+.brand-mark.is-touch-revealed .brand-pin-ring {
+  transform: scale(var(--brand-pin-ring-scale));
+  opacity: var(--brand-pin-ring-opacity);
+  transition-duration: var(--brand-pin-time);
+}
+
 .primary-nav {
   display: flex;
   align-items: center;
@@ -342,6 +398,8 @@ button:focus-visible {
 /* ---------- Hero ---------- */
 
 .hero {
+  position: relative;
+  overflow: hidden;
   background-color: var(--navy);
   background-image: radial-gradient(
     1100px 620px at 80% -12%,
@@ -350,6 +408,20 @@ button:focus-visible {
   );
   color: var(--offwhite);
   padding-block: clamp(56px, 8vw, 112px) clamp(48px, 7vw, 84px);
+}
+
+/* Full-bleed thread field behind the hero. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Keep the hero content above the background field. */
+.hero .container {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-grid {
@@ -385,6 +457,7 @@ button:focus-visible {
 .hero-visual {
   max-width: 520px;
   width: 100%;
+  aspect-ratio: 460 / 420;
   justify-self: end;
 }
 
@@ -398,8 +471,160 @@ button:focus-visible {
   stroke: rgba(255, 255, 255, 0.1);
 }
 
+/* Threads converge (behind the ladder): loose strands enter from the left and
+   gather onto the lower rungs, tightening as the structure locks. */
 .hero-svg-grid line {
   stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1;
+}
+
+.hero-svg-thread {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+.hero-svg-core-seg {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hero-svg-core-seg-1 {
+  animation: heroCoreLeft var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.hero-svg-core-seg-2 {
+  animation: heroCoreMid var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.hero-svg-core-seg-3 {
+  animation: heroCoreRight var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.hero-svg-output {
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: heroOutput var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* The three core segments start spread and dim, then converge into a tight,
+   bright row as the path locks. Phases: 0-12% gather · 12-56% converge ·
+   56-84% hold · 84-98% release. */
+@keyframes heroCoreLeft {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0.35;
+  }
+  12% {
+    transform: translateX(-20px);
+    opacity: 0.35;
+  }
+  56% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  84% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  98% {
+    transform: translateX(-20px);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateX(-20px);
+    opacity: 0.35;
+  }
+}
+
+@keyframes heroCoreRight {
+  0% {
+    transform: translateX(20px);
+    opacity: 0.35;
+  }
+  12% {
+    transform: translateX(20px);
+    opacity: 0.35;
+  }
+  56% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  84% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  98% {
+    transform: translateX(20px);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateX(20px);
+    opacity: 0.35;
+  }
+}
+
+@keyframes heroCoreMid {
+  0% {
+    opacity: 0.35;
+  }
+  12% {
+    opacity: 0.35;
+  }
+  56% {
+    opacity: 1;
+  }
+  84% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0.35;
+  }
+}
+
+/* Output connectors draw out of the core once it locks, then retract. */
+@keyframes heroOutput {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  42% {
+    stroke-dashoffset: 1;
+  }
+  56% {
+    stroke-dashoffset: 0;
+  }
+  84% {
+    stroke-dashoffset: 0;
+  }
+  92% {
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* Hero loop: "Unpin" — the stepped growth ladder starts pinned at its origin,
+   unlocks, draws itself step by step, holds the completed structure, then eases
+   back to the compact state so the loop is seamless. Only the path, nodes,
+   focus and ring move; panel and grid stay static.
+   Tune loop length with --hero-loop and accent color with --teal. */
+.hero-svg-path {
+  stroke: var(--teal);
+  stroke-opacity: 0.9;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: heroDraw var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 .hero-svg-nodes circle,
@@ -407,11 +632,179 @@ button:focus-visible {
   fill: var(--teal);
 }
 
+.hero-svg-nodes circle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Nodes 2-4 start stacked at the origin (70,330) and settle onto the line
+   exactly as the drawing tip reaches each one. Node 1 is the fixed anchor. */
+.hero-svg-nodes circle:nth-child(2) {
+  animation: heroNode2 var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.hero-svg-nodes circle:nth-child(3) {
+  animation: heroNode3 var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.hero-svg-nodes circle:nth-child(4) {
+  animation: heroNode4 var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.hero-svg-focus {
+  animation: heroFocus var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
 .hero-svg-focus-ring {
   fill: none;
   stroke: var(--teal);
   stroke-width: 1.5;
-  opacity: 0.4;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroRing var(--hero-loop, 11s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* Phases: 0-12% unlock · 12-56% extend · 56-84% still · 84-98% return. */
+@keyframes heroDraw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  6% {
+    stroke-dashoffset: 1;
+  }
+  12% {
+    stroke-dashoffset: 1;
+  }
+  56% {
+    stroke-dashoffset: 0;
+  }
+  84% {
+    stroke-dashoffset: 0;
+  }
+  98% {
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes heroNode2 {
+  0% {
+    transform: translate(-80px, 80px);
+  }
+  12% {
+    transform: translate(-80px, 80px);
+  }
+  24.6% {
+    transform: translate(0, 0);
+  }
+  84% {
+    transform: translate(0, 0);
+  }
+  94% {
+    transform: translate(0, 0);
+  }
+  98% {
+    transform: translate(-80px, 80px);
+  }
+  100% {
+    transform: translate(-80px, 80px);
+  }
+}
+
+@keyframes heroNode3 {
+  0% {
+    transform: translate(-170px, 160px);
+  }
+  12% {
+    transform: translate(-170px, 160px);
+  }
+  37.9% {
+    transform: translate(0, 0);
+  }
+  84% {
+    transform: translate(0, 0);
+  }
+  89.75% {
+    transform: translate(0, 0);
+  }
+  98% {
+    transform: translate(-170px, 160px);
+  }
+  100% {
+    transform: translate(-170px, 160px);
+  }
+}
+
+@keyframes heroNode4 {
+  0% {
+    transform: translate(-260px, 230px);
+  }
+  12% {
+    transform: translate(-260px, 230px);
+  }
+  50.5% {
+    transform: translate(0, 0);
+  }
+  84% {
+    transform: translate(0, 0);
+  }
+  85.75% {
+    transform: translate(0, 0);
+  }
+  98% {
+    transform: translate(-260px, 230px);
+  }
+  100% {
+    transform: translate(-260px, 230px);
+  }
+}
+
+@keyframes heroFocus {
+  0% {
+    opacity: 0.22;
+  }
+  6% {
+    opacity: 0.22;
+  }
+  14% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0.22;
+  }
+  100% {
+    opacity: 0.22;
+  }
+}
+
+/* A single soft ring expansion when the focus unlocks. */
+@keyframes heroRing {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  6% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  12% {
+    transform: scale(1.1);
+    opacity: 0.3;
+  }
+  20% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
 }
 
 .hero-principles {
@@ -858,5 +1251,42 @@ button:focus-visible {
 
   .text-link:hover::after {
     transform: none;
+  }
+
+  /* prefers-reduced-motion: hold the completed, drawn structure instead. */
+  .hero-svg-path,
+  .hero-svg-nodes circle,
+  .hero-svg-focus,
+  .hero-svg-focus-ring,
+  .hero-svg-core-seg,
+  .hero-svg-output {
+    animation: none;
+  }
+
+  .hero-svg-path {
+    stroke-dashoffset: 0;
+  }
+
+  .hero-svg-core-seg {
+    transform: none;
+    opacity: 1;
+  }
+
+  .hero-svg-output {
+    stroke-dashoffset: 0;
+  }
+
+  .hero-svg-nodes circle:nth-child(2),
+  .hero-svg-nodes circle:nth-child(3),
+  .hero-svg-nodes circle:nth-child(4) {
+    transform: none;
+  }
+
+  .hero-svg-focus {
+    opacity: 1;
+  }
+
+  .hero-svg-focus-ring {
+    opacity: 0;
   }
 }

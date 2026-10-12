@@ -1,3 +1,5 @@
+import BrandPin from "./BrandPin.jsx";
+
 const footerNav = [
   { label: "Services", href: "#services" },
   { label: "Our Approach", href: "#approach" },
@@ -11,11 +13,7 @@ export default function Footer() {
       <div className="container footer-grid">
         <div className="footer-brand">
           <a className="brand brand-footer" href="#home" aria-label="theUnpin — home">
-            <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-              <path d="M16 25V13" strokeWidth="2.6" strokeLinecap="round" />
-              <circle cx="16" cy="9.5" r="3.4" />
-              <path d="M8.5 20.5h15" strokeWidth="1.8" strokeLinecap="round" opacity="0.55" />
-            </svg>
+            <BrandPin />
             <span className="brand-name">theUnpin</span>
           </a>
           <p className="footer-statement">
