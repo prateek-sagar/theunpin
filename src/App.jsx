@@ -6,6 +6,7 @@ import About from "./components/About.jsx";
 import ContactCTA from "./components/ContactCTA.jsx";
 import ThreadField from "./components/ThreadField.jsx";
 import Footer from "./components/Footer.jsx";
+import { Analytics } from "@vercel/analytics/react"
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <ContactCTA />
       </main>
       <Footer />
+      <Analytics />
     </>
   );
 }
