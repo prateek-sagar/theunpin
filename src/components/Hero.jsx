@@ -29,7 +29,6 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="hero-visual" aria-hidden="true" />
         </div>
 
         <div className="hero-principles">
